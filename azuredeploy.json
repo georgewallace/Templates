@@ -110,7 +110,7 @@
             "apiVersion": "2015-11-01-preview",
             "type": "Microsoft.OperationsManagement/solutions",
             "name": "[concat(variables('batch1').solutions[copyIndex()].Name)]",
-            "location": "[parameters('omsWorkspaceRegion')]",
+            "location": "[parameters('workspaceRegion')]",
             "dependsOn": [
                 "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]"
             ],

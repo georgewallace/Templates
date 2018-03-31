@@ -38,7 +38,7 @@
         },
         "_artifactsLocation": {
             "type": "string",
-            "defaultValue": "https://raw.githubusercontent.com/krnese/AzureDeploy/master/OMS/MSOMS/Solutions/custom",
+            "defaultValue": "",
             "metadata": {
                 "description": "URI to artifacts location"
             }
@@ -48,13 +48,6 @@
             "defaultValue": "",
             "metadata": {
                 "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated"
-            }
-        },
-        "jobGuid": {
-            "type": "string",
-            "defaultValue": "66533407-3d53-4131-a2a6-ead17a08fa0c",
-            "metadata": {
-                "description": "GUID for the schedule creation - create a unique before deploy"
             }
         }
     },

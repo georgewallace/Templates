@@ -55,15 +55,15 @@
         "batch1": {
             "solutions": [
                 {
-                    "name": "[concat('ChangeTracking', '(', parameters('omsWorkspaceName'), ')')]",
+                    "name": "[concat('ChangeTracking', '(', parameters('workspaceName'), ')')]",
                     "marketplaceName": "ChangeTracking"
                 },
                 {
-                    "name": "[concat('Updates', '(', parameters('omsWorkspaceName'), ')')]",
+                    "name": "[concat('Updates', '(', parameters('workspaceName'), ')')]",
                     "marketplaceName": "Updates"
                 },
                 {
-                    "name": "[concat('AzureAutomation', '(', parameters('omsWorkspaceName'), ')')]",
+                    "name": "[concat('AzureAutomation', '(', parameters('workspaceName'), ')')]",
                     "marketplaceName": "AzureAutomation"
                 }
             ]

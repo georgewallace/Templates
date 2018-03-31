@@ -52,22 +52,19 @@
         }
     },
     "variables": {
-        "batch1": {
-            "solutions": [
-                {
-                    "name": "[concat('ChangeTracking', '(', parameters('workspaceName'), ')')]",
-                    "marketplaceName": "ChangeTracking"
-                },
-                {
-                    "name": "[concat('Updates', '(', parameters('workspaceName'), ')')]",
-                    "marketplaceName": "Updates"
-                },
-                {
-                    "name": "[concat('AzureAutomation', '(', parameters('workspaceName'), ')')]",
-                    "marketplaceName": "AzureAutomation"
-                }
-            ]
+        "solutions": [
+
+   {
+            "Name": "[Concat('Updates', '(', parameters('workspaceName'), ')')]",
+            "GalleryName": "Updates"
+        },
+        {
+       
+            "Name": "[Concat('ChangeTracking', '(', parameters('workspaceName'), ')')]",
+            "GalleryName": "ChangeTracking"
         }
+        ],
+        "automationPricingTier": "Free"
     },
     "resources": [
         {
@@ -102,30 +99,52 @@
             "location": "[parameters('automationRegion')]",
             "properties": {
                 "sku": {
-                    "name": "OMS"
+                    "name": "[variables('automationPricingTier')]"
                 }
             }
         },
         {
             "apiVersion": "2015-11-01-preview",
-            "type": "Microsoft.OperationsManagement/solutions",
-            "name": "[concat(variables('batch1').solutions[copyIndex()].Name)]",
             "location": "[parameters('workspaceRegion')]",
+            "name": "[concat(variables('solutions')[copyIndex()].Name)]",
+            "type": "Microsoft.OperationsManagement/solutions",
             "dependsOn": [
-                "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]"
+              "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]"
             ],
             "copy": {
                 "name": "solutionCopy",
-                "count": "[length(variables('batch1').solutions)]"
+                "count": "[length(variables('solutions'))]"
             },
             "properties": {
-                "workspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]"
+              "workspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]"
             },
             "plan": {
-                "name": "[variables('batch1').solutions[copyIndex()].name]",
-                "product": "OMSGallery/', variables('batch1').solutions[copyIndex()].marketplaceName)]",
-                "promotionCode": "",
-                "publisher": "Microsoft"
+              "name": "variables('solutions')[copyIndex()].Name)]",
+              "publisher": "Microsoft",
+              "product": "[concat('OMSGallery/', variables('solutions')[copyIndex()].GalleryName)]",
+              "promotionCode": ""
+            }
+          },
+        {
+            "type": "Microsoft.Automation/automationAccounts/providers/diagnosticSettings",
+            "name": "[concat(parameters('automationAccountName'), '/', 'Microsoft.Insights/service')]",
+            "apiVersion": "2015-07-01",
+            "dependsOn": [
+                "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccountName'))]",
+                "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]"
+            ],
+            "properties": {
+                "workspaceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]",
+                "logs": [
+                    {
+                        "category": "JobLogs",
+                        "enabled": true
+                    },
+                    {
+                        "category": "JobStreams",
+                        "enabled": true
+                    }
+                ]
             }
         }
     ],
